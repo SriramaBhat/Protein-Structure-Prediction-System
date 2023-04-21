@@ -1,0 +1,45 @@
+.navigation {
+  width: 100%;
+  height: 5rem;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  margin-bottom: 1.5rem;
+  background-color: rgb(94, 178, 230);
+
+  .logo-container {
+    height: 100%;
+    width: 25rem;
+    padding-left: 1rem;
+    display: flex;
+    justify-content: flex-start;
+    font-weight: bold;
+    align-items: center;
+
+    #protein-logo {
+      margin: 0;
+      width: 85px;
+      height: 70px;
+      object-fit: cover;
+      display: block;
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .nav-links-container {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    .nav-link {
+      padding: 0.6rem 1rem;
+      cursor: pointer;
+    }
+  }
+}
