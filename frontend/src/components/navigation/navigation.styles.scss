@@ -5,8 +5,8 @@
   display: flex;
   justify-content: space-between;
   margin: 0;
-  margin-bottom: 1.5rem;
   background-color: rgb(94, 178, 230);
+  position: static;
 
   .logo-container {
     height: 100%;
@@ -40,6 +40,11 @@
     .nav-link {
       padding: 0.6rem 1rem;
       cursor: pointer;
+    }
+
+    .nav-link:hover {
+      background-color: rgb(68, 147, 197);
+      border-radius: 4px;
     }
   }
 }

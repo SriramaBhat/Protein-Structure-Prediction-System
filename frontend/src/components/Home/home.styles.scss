@@ -1,0 +1,53 @@
+.main-section {
+  background-image: linear-gradient(to top, rgba(15, 13, 13, 0.6), rgba(23, 20, 20, 0.6)), url("../../assets/images/dna1.jpg");
+  padding: 7rem;
+
+  .signin-btn {
+    background-color: lightskyblue;
+    color: green;
+    padding: 0.5rem 5rem;
+    border-radius: 6px;
+  }
+
+  .signin-btn:hover {
+    background-color: lightblue;
+  }
+}
+
+.DNA-converter {
+  background-image: linear-gradient(to top, rgba(15, 13, 13, 0.6), rgba(23, 20, 20, 0.6)), url("../../assets/images/dna2.jpg");
+  padding: 5rem;
+}
+
+.main-section, .DNA-converter, .protein-structure {
+  text-align: center;
+  background-size: cover;
+  transition: ease-in-out 0.5s;
+
+  h1 {
+    margin-top: 0;
+    font-size: 2rem;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  h1, li, p {
+    color: lightgreen;
+  }
+
+  li, p {
+    font-size: 1.2rem;
+  }
+}
+
+.protein-structure {
+  background-image: linear-gradient(to top, rgba(15, 13, 13, 0.6), rgba(23, 20, 20, 0.6)), url("../../assets/images/protein.jpg");
+  padding: 5rem;
+}
+
+.main-section:hover, .DNA-converter:hover, .protein-structure:hover {
+  transform: scale(1, 1.02);
+  transition: ease-in-out 0.5s;
+}
