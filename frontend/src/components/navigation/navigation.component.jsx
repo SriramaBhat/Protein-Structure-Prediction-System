@@ -1,10 +1,15 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { Link, Outlet } from "react-router-dom";
 
-import "./navigation.styles.scss"
+import { UserContext } from "../../context/user.context";
+import { signOutUser } from "../../utils/firebase/firebase.utils";
+
+import "./navigation.styles.scss";
 import proteinLogo from "../../assets/images/protein-logo1.png";
 
 const Navigation = () => {
+  const { currentUser } = useContext(UserContext);
+
   return (
     <Fragment>
       <div className="navigation">
@@ -13,12 +18,29 @@ const Navigation = () => {
           <p>Protein Structure Predictor</p>
         </Link>
         <div className="nav-links-container">
-          <Link className="nav-link" to="/signup">
-            Signup
-          </Link>
-          <Link className="nav-link" to="/login">
-            Login
-          </Link>
+          {currentUser ? (
+            <div>
+              <Link className="nav-link" to="/dna-to-aa">
+                DNA to Amino Acid
+              </Link>
+              <Link className="nav-link" to="/aa-struct-pred">
+                Protein Structure Predictor
+              </Link>
+              <span className="nav-link" onClick={signOutUser}>
+                {""}Sign Out{""}
+              </span>
+            </div>
+          ) : (
+            <div>
+              {" "}
+              <Link className="nav-link" to="/signup">
+                Signup
+              </Link>
+              <Link className="nav-link" to="/login">
+                Login
+              </Link>
+            </div>
+          )}
         </div>
       </div>
       <Outlet />
