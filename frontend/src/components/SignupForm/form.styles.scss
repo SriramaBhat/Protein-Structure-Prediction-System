@@ -1,0 +1,29 @@
+.form-container {
+  text-align: center;
+  margin: 3rem 15rem;
+  background-color: rgb(100, 160, 95);
+  padding: 2rem 5rem;
+  border-radius: 12px;
+
+  .form-btn {
+    padding: 0.5rem 3rem;
+    border-radius: 6px;
+    font-family: inherit;
+    background-color: palegreen;
+    border: none;
+    font-size: 1.1rem;
+    transition: ease-in-out 300ms;
+  }
+
+  .form-btn:hover {
+    transform: scale(1.1, 1.1);
+    transition: ease-in-out 300ms;
+    background-color: lawngreen;
+    border: 0.5px solid black;
+  }
+
+  .buttons-container button {
+    display: inline-block;
+    margin: 0px 1rem;
+  }
+}

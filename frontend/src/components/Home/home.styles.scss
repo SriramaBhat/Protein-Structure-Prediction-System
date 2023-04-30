@@ -1,17 +1,17 @@
 .main-section {
   background-image: linear-gradient(to top, rgba(15, 13, 13, 0.6), rgba(23, 20, 20, 0.6)), url("../../assets/images/dna1.jpg");
   padding: 7rem;
+}
 
-  .signin-btn {
-    background-color: lightskyblue;
-    color: green;
-    padding: 0.5rem 5rem;
-    border-radius: 6px;
-  }
+.signin-btn {
+  background-color: lightskyblue;
+  color: green;
+  padding: 0.5rem 5rem;
+  border-radius: 6px;
+}
 
-  .signin-btn:hover {
-    background-color: lightblue;
-  }
+.signin-btn:hover {
+  background-color: lightblue;
 }
 
 .DNA-converter {
