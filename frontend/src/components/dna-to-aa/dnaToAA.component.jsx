@@ -1,5 +1,5 @@
 import { useState } from "react";
-import FormInput from "../form-input/form-input.component";
+// import FormInput from "../form-input/form-input.component";
 import "./dnaToAA.styles.scss";
 
 const defaultFormFields = {
@@ -38,14 +38,22 @@ const DNAToAA = () => {
           This part converts the given DNA string into a sequence of Amino Acids
         </p>
         <form action="" onSubmit={handleSubmit}>
-          <FormInput
-            label="DNA String"
-            type="text"
-            required
-            name="dnaString"
-            value={dnaString}
-            onChange={handleChange}
-          />
+          <div className="group">
+            <textarea
+              type="text"
+              required
+              name="dnaString"
+              value={dnaString}
+              onChange={handleChange}
+              cols="50"
+              rows="6"
+              id="dnaString"
+              className="text-inp"
+            ></textarea>
+            <label htmlFor="dnaString" className="form-input-label">
+              DNA String
+            </label>
+          </div>
           <button type="submit" className="form-btn" onSubmit={handleSubmit}>
             Convert
           </button>
