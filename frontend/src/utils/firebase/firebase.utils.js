@@ -10,15 +10,7 @@ import {
 } from "firebase/auth";
 
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBTwwvuSdRuhueZS3W2TOWeUCOp9Du6yns",
-  authDomain: "protein-structure-predictor.firebaseapp.com",
-  projectId: "protein-structure-predictor",
-  storageBucket: "protein-structure-predictor.appspot.com",
-  messagingSenderId: "555245973826",
-  appId: "1:555245973826:web:d4fb52a583135e07f198db"
-};
+import { firebaseConfig } from "./firebase.config";
 
 initializeApp(firebaseConfig);
 

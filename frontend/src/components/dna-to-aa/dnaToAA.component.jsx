@@ -1,5 +1,5 @@
 import { useState } from "react";
-// import FormInput from "../form-input/form-input.component";
+import { fetchData } from "../../utils/fetchData/Fetch";
 import "./dnaToAA.styles.scss";
 
 const defaultFormFields = {
@@ -8,6 +8,9 @@ const defaultFormFields = {
 
 const DNAToAA = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
+  const [rnaString, setRnaString] = useState("");
+  const [aaString, setAaString] = useState("");
+  const [conversionMessage, setConversionMessage] = useState("");
   const { dnaString } = formFields;
 
   const resetFormFields = () => {
@@ -15,10 +18,18 @@ const DNAToAA = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
-    const dnaString = event.target.dnaString.value;
-    console.log(dnaString);
     try {
+      event.preventDefault();
+      const dnaString = event.target.dnaString.value;
+      const { data } = await fetchData(
+        "http://localhost:5000/dna-to-aa",
+        "POST",
+        {
+          dnaString: dnaString,
+        }
+      );
+      setConversionMessage(data.message);
+      setRnaString(data.rnaString);
       resetFormFields();
     } catch (error) {
       console.log(error);
@@ -35,30 +46,44 @@ const DNAToAA = () => {
       <div className="form-container">
         <h1>DNA bases to Amino Acid Sequence Converter</h1>
         <p>
-          This part converts the given DNA string into a sequence of Amino Acids
+          For the conversion of DNA String into a sequence of Amino Acids,
+          please enter the sequences of the coding strand (5' to 3' of the DNA).
         </p>
         <form action="" onSubmit={handleSubmit}>
-          <div className="group">
+          <div className="textarea-div">
+            <label htmlFor="dnaString" className="form-input-label">
+              DNA String (Must contain only A, T, G and C)
+            </label>
             <textarea
               type="text"
               required
               name="dnaString"
               value={dnaString}
               onChange={handleChange}
-              cols="50"
-              rows="6"
+              cols="75"
+              rows="10"
               id="dnaString"
               className="text-inp"
             ></textarea>
-            <label htmlFor="dnaString" className="form-input-label">
-              DNA String
-            </label>
           </div>
           <button type="submit" className="form-btn" onSubmit={handleSubmit}>
             Convert
           </button>
         </form>
       </div>
+      {rnaString === "" ? (
+        <div></div>
+      ) : rnaString === null ? (
+        <div className="form-container">
+          <h1>Please Check the Input !!</h1>
+          <p>{conversionMessage}</p>
+        </div>
+      ) : (
+        <div className="form-container">
+          <h1>RNA String</h1>
+          <p>{rnaString}</p>
+        </div>
+      )}
     </div>
   );
 };
