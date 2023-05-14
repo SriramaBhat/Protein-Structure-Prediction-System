@@ -1,2 +1,4 @@
 # Dependencies
 /node_modules
+/protein_structure_prediction/env
+/protein_structure_prediction/.ipynb_checkpoints

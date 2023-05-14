@@ -21,6 +21,10 @@ const DNAToAA = () => {
     try {
       event.preventDefault();
       const dnaString = event.target.dnaString.value;
+      if (dnaString.length % 3 !== 0) {
+        alert("DNA not of required length");
+        return;
+      }
       const { data } = await fetchData(
         "http://localhost:5000/dna-to-aa",
         "POST",
@@ -30,6 +34,7 @@ const DNAToAA = () => {
       );
       setConversionMessage(data.message);
       setRnaString(data.rnaString);
+      setAaString(data.aaString);
       resetFormFields();
     } catch (error) {
       console.log(error);
@@ -82,6 +87,31 @@ const DNAToAA = () => {
         <div className="form-container">
           <h1>RNA String</h1>
           <p>{rnaString}</p>
+          {aaString === "Start Invalid" || aaString === "Stop Invalid" ? (
+            <div>
+              <h1>Couldn't generate Amino Acid Sequence !!</h1>
+              {aaString === "Start Invalid" ? (
+                <p>
+                  Start Codon is not AUG, therefore, no protein will be formed.
+                </p>
+              ) : aaString === "Stop Invalid" ? (
+                <p>
+                  Stop Codons are not present, therefore protein will not be
+                  formed.
+                </p>
+              ) : (
+                <p>
+                  The Length of the DNA String does not form valid codons (Must
+                  be divisible by 3). Therefore no protein is formed.
+                </p>
+              )}
+            </div>
+          ) : (
+            <div>
+              <h1>Amino Acid Sequence</h1>
+              <p>{aaString}</p>
+            </div>
+          )}
         </div>
       )}
     </div>
