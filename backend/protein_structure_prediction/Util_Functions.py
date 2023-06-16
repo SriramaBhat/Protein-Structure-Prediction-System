@@ -1,3 +1,4 @@
+
 import collections
 import math
 import os
@@ -12,24 +13,14 @@ from Bio.Data.IUPACData import protein_letters_1to3
 import numpy as np
 from torch.nn.utils.rnn import pad_sequence
 
-NUM_DIMENSIONS = 3
-NUM_DIHEDRALS = 3
-BOND_LENGTHS = torch.tensor([145.801, 152.326, 132.868], dtype=torch.float32)
-BOND_ANGLES = torch.tensor([2.124, 1.941, 2.028], dtype=torch.float32)
-PNERF_INIT_MATRIX = [torch.tensor([-torch.sqrt(torch.tensor([1.0 / 2.0])),
-                                   torch.sqrt(torch.tensor([3.0 / 2.0])), 0]),
-                     torch.tensor([-torch.sqrt(torch.tensor([2.0])), 0, 0]),
-                     torch.tensor([0, 0, 0])]
-
 AA_ID_DICT = {'A': 1, 'C': 2, 'D': 3, 'E': 4, 'F': 5, 'G': 6, 'H': 7, 'I': 8, 'K': 9,
               'L': 10, 'M': 11, 'N': 12, 'P': 13, 'Q': 14, 'R': 15, 'S': 16, 'T': 17,
               'V': 18, 'W': 19, 'Y': 20}
 
 PI_TENSOR = torch.tensor([3.141592])
-NUM_FRAGMENTS = torch.tensor(6)
 
 
-def construct_dataloader_from_disk(filename, minibatch_size):
+def contruct_dataloader_from_disk(filename, minibatch_size):
     return torch.utils.data.DataLoader(H5PytorchDataset(filename),
                                        batch_size=minibatch_size,
                                        shuffle=True,
@@ -48,7 +39,7 @@ class H5PytorchDataset(torch.utils.data.Dataset):
         prim = torch.masked_select(
             torch.Tensor(self.h5pyfile['primary'][index, :]).type(dtype=torch.int),
             mask)
-        tertiary = torch.Tensor(self.h5pyfile['tertiary'][index][:int(mask.sum())])
+        tertiary = torch.Tensor(self.h5pyfile['tertiary'][index][:int(mask.sum())])# max length x 9
         return prim, tertiary, mask
 
     def __len__(self):
@@ -77,6 +68,16 @@ def get_experiment_id():
     return globals().get("experiment_id")
 
 
+def write_out(*args, end='\n'):
+    output_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S') \
+                    + ": " + str.join(" ", [str(a) for a in args]) + end
+    if globals().get("experiment_id") is not None:
+        with open("output/" + globals().get("experiment_id") + ".txt", "a+") as output_file:
+            output_file.write(output_string)
+            output_file.flush()
+    print(output_string, end="")
+
+
 def write_model_to_disk(model):
     path = "output/models/" + globals().get("experiment_id") + ".model"
     torch.save(model, path)
@@ -88,26 +89,6 @@ def write_prediction_data_to_disk(prediction_data):
     output_file = open(filepath, 'w')
     output_file.write(prediction_data)
     output_file.close()
-
-
-def protein_id_to_str(protein_id_list):
-    # noinspection PyTypeChecker
-    _aa_dict_inverse = {v: k for k, v in AA_ID_DICT.items()}
-    aa_list = []
-    for protein_id in protein_id_list:
-        aa_symbol = _aa_dict_inverse[protein_id.item()]
-        aa_list.append(aa_symbol)
-    return aa_list
-
-
-def write_out(*args, end='\n'):
-    output_string = datetime.now().strftime('%Y-%m-%d %H:%M:%S') \
-                    + ": " + str.join(" ", [str(a) for a in args]) + end
-    if globals().get("experiment_id") is not None:
-        with open("output/" + globals().get("experiment_id") + ".txt", "a+") as output_file:
-            output_file.write(output_string)
-            output_file.flush()
-    print(output_string, end="")
 
 
 def draw_plot(fig, plt, validation_dataset_size, sample_num, train_loss_values,
@@ -146,6 +127,14 @@ def draw_ramachandran_plot(fig, plt, phi, psi):
     return draw_with_vars
 
 
+def write_result_summary(accuracy):
+    output_string = globals().get("experiment_id") + ": " + str(accuracy) + "\n"
+    with open("output/result_summary.txt", "a+") as output_file:
+        output_file.write(output_string)
+        output_file.flush()
+    print(output_string, end="")
+
+
 def calculate_dihedral_angles_over_minibatch(atomic_coords_padded, batch_sizes, use_gpu):
     angles = []
     batch_sizes = torch.LongTensor(batch_sizes)
@@ -162,12 +151,23 @@ def calculate_dihedral_angles_over_minibatch(atomic_coords_padded, batch_sizes, 
     return torch.nn.utils.rnn.pad_sequence(angles), batch_sizes
 
 
+def protein_id_to_str(protein_id_list):
+    _aa_dict_inverse = {v: k for k, v in AA_ID_DICT.items()}
+    aa_list = []
+    for protein_id in protein_id_list:
+        aa_symbol = _aa_dict_inverse[protein_id.item()]
+        aa_list.append(aa_symbol)
+    return aa_list
+
+
 def calculate_dihedral_angles(atomic_coords, use_gpu):
     atomic_coords = atomic_coords.contiguous().view(-1, 3)
 
     zero_tensor = torch.zeros(1)
     if use_gpu:
         zero_tensor = zero_tensor.cuda()
+
+
 
     angles = torch.cat((zero_tensor,
                         zero_tensor,
@@ -277,7 +277,6 @@ def write_to_pdb(structure, prot_id):
 
 def calc_pairwise_distances(chain_a, chain_b, use_gpu):
     distance_matrix = torch.Tensor(chain_a.size()[0], chain_b.size()[0]).type(torch.float)
-    # add small epsilon to avoid boundary issues
     epsilon = 10 ** (-4) * torch.ones(chain_a.size(0), chain_b.size(0))
     if use_gpu:
         distance_matrix = distance_matrix.cuda()
@@ -298,8 +297,6 @@ def calc_drmsd(chain_a, chain_b, use_gpu=False):
 
 
 def transpose_atoms_to_center_of_mass(atoms_matrix):
-    # calculate com by summing x, y and z respectively
-    # and dividing by the number of points
     center_of_mass = np.matrix([[atoms_matrix[0, :].sum() / atoms_matrix.shape[1]],
                                 [atoms_matrix[1, :].sum() / atoms_matrix.shape[1]],
                                 [atoms_matrix[2, :].sum() / atoms_matrix.shape[1]]])
@@ -307,16 +304,13 @@ def transpose_atoms_to_center_of_mass(atoms_matrix):
 
 
 def calc_rmsd(chain_a, chain_b):
-    # move to center of mass
     chain_a_value = chain_a.cpu().numpy().transpose()
     chain_b_value = chain_b.cpu().numpy().transpose()
     X = transpose_atoms_to_center_of_mass(chain_a_value)
     Y = transpose_atoms_to_center_of_mass(chain_b_value)
 
     R = Y * X.transpose()
-    # extract the singular values
     _, S, _ = np.linalg.svd(R)
-    # compute RMSD using the formular
     E0 = sum(list(np.linalg.norm(x) ** 2 for x in X.transpose())
              + list(np.linalg.norm(x) ** 2 for x in Y.transpose()))
     TraceS = sum(S)
@@ -340,15 +334,6 @@ def calc_angular_difference(values_1, values_2):
     return acc / values_1.shape[0]
 
 
-def structure_to_backbone_atoms(structure):
-    predicted_coords = []
-    for res in structure.get_residues():
-        predicted_coords.append(torch.Tensor(res["N"].get_coord()))
-        predicted_coords.append(torch.Tensor(res["CA"].get_coord()))
-        predicted_coords.append(torch.Tensor(res["C"].get_coord()))
-    return torch.stack(predicted_coords).view(-1, 9)
-
-
 def structures_to_backbone_atoms_padded(structures):
     backbone_atoms_list = []
     for structure in structures:
@@ -358,13 +343,24 @@ def structures_to_backbone_atoms_padded(structures):
     return backbone_atoms_padded, batch_sizes_backbone
 
 
+def structure_to_backbone_atoms(structure):
+    predicted_coords = []
+    for res in structure.get_residues():
+        predicted_coords.append(torch.Tensor(res["N"].get_coord()))
+        predicted_coords.append(torch.Tensor(res["CA"].get_coord()))
+        predicted_coords.append(torch.Tensor(res["C"].get_coord()))
+    return torch.stack(predicted_coords).view(-1, 9)
+
+
+NUM_FRAGMENTS = torch.tensor(6)
+
+
 def get_backbone_positions_from_angles(angular_emissions, batch_sizes, use_gpu):
-    # angular_emissions -1 x minibatch size x 3 (omega, phi, psi)
     points = dihedral_to_point(angular_emissions, use_gpu)
     coordinates = point_to_coordinate(
         points,
         use_gpu,
-        num_fragments=NUM_FRAGMENTS) / 100  # divide by 100 to angstrom unit
+        num_fragments=NUM_FRAGMENTS) / 100
     return coordinates.transpose(0, 1).contiguous()\
                .view(len(batch_sizes), -1, 9).transpose(0, 1), batch_sizes
 
@@ -384,6 +380,10 @@ def calc_avg_drmsd_over_minibatch(backbone_atoms_padded, actual_coords_padded, b
     return drmsd_avg / len(backbone_atoms_list)
 
 
+def encode_primary_string(primary):
+    return list([AA_ID_DICT[aa] for aa in primary])
+
+
 def initial_pos_from_aa_string(batch_aa_string, use_gpu):
     arr_of_angles = []
     batch_sizes = []
@@ -399,8 +399,49 @@ def initial_pos_from_aa_string(batch_aa_string, use_gpu):
     return get_backbone_positions_from_angles(padded, batch_sizes, use_gpu)
 
 
-def encode_primary_string(primary):
-    return list([AA_ID_DICT[aa] for aa in primary])
+def pass_messages(aa_features, message_transformation, use_gpu):
+    feature_size = aa_features.size(1)
+    aa_count = aa_features.size(0)
+
+    arange2d = torch.arange(aa_count).repeat(aa_count).view((aa_count, aa_count))
+
+    diagonal_matrix = (arange2d == arange2d.transpose(0, 1)).int()
+
+    eye = diagonal_matrix.view(-1).expand(2, feature_size, -1)\
+        .transpose(1, 2).transpose(0, 1)
+
+    eye_inverted = torch.ones(eye.size(), dtype=torch.uint8) - eye
+    if use_gpu:
+        eye_inverted = eye_inverted.cuda()
+    features_repeated = aa_features.repeat((aa_count, 1)).view((aa_count, aa_count, feature_size))
+    aa_messages = torch.stack((features_repeated.transpose(0, 1), features_repeated))\
+        .transpose(0, 1).transpose(1, 2).view(-1, 2, feature_size)
+
+    eye_inverted_location = eye_inverted.view(-1).nonzero().squeeze(1)
+
+    aa_msg_pairs = aa_messages\
+        .reshape(-1).gather(0, eye_inverted_location).view(-1, 2, feature_size)
+
+    transformed = message_transformation(aa_msg_pairs).view(aa_count, aa_count - 1, -1)
+    transformed_sum = transformed.sum(dim=1)
+    return transformed_sum
+
+
+def load_model_from_disk(path, force_cpu=True):
+    if force_cpu:
+        model = torch.load(path, map_location=lambda storage, loc: storage)
+        model.flatten_parameters()
+        model.use_gpu = False
+    else:
+        model = torch.load(path)
+        model.flatten_parameters()
+    return model
+
+NUM_DIMENSIONS = 3
+NUM_DIHEDRALS = 3
+BOND_LENGTHS = torch.tensor([145.801, 152.326, 132.868], dtype=torch.float32)
+BOND_ANGLES = torch.tensor([2.124, 1.941, 2.028], dtype=torch.float32)
+
 
 def dihedral_to_point(dihedral, use_gpu, bond_lengths=BOND_LENGTHS,
                       bond_angles=BOND_ANGLES):
@@ -425,6 +466,10 @@ def dihedral_to_point(dihedral, use_gpu, bond_lengths=BOND_LENGTHS,
                                                NUM_DIMENSIONS)
     return point_final
 
+PNERF_INIT_MATRIX = [torch.tensor([-torch.sqrt(torch.tensor([1.0 / 2.0])),
+                                   torch.sqrt(torch.tensor([3.0 / 2.0])), 0]),
+                     torch.tensor([-torch.sqrt(torch.tensor([2.0])), 0, 0]),
+                     torch.tensor([0, 0, 0])]
 
 def point_to_coordinate(points, use_gpu, num_fragments):
     total_num_angles = points.size(0)
@@ -456,9 +501,9 @@ def point_to_coordinate(points, use_gpu, num_fragments):
         bc = F.normalize(prev_three_coords.c - prev_three_coords.b, dim=-1)
         n = F.normalize(compute_cross(prev_three_coords.b - prev_three_coords.a,
                                       bc, dim=2 if multi_m else 1), dim=-1)
-        if multi_m:  # multiple fragments, one atom at a time
+        if multi_m:
             m = torch.stack([bc, compute_cross(n, bc, dim=2), n]).permute(1, 2, 3, 0)
-        else:  # single fragment, reconstructed entirely at once.
+        else:
             s = point.shape + (3,)
             m = torch.stack([bc, compute_cross(n, bc, dim=1), n]).permute(1, 2, 0)
             m = m.repeat(s[0], 1, 1).view(s)
@@ -469,7 +514,7 @@ def point_to_coordinate(points, use_gpu, num_fragments):
     coords_list = []
     prev_three_coords = init_coords
 
-    for point in points.split(1, dim=0):  # Iterate over FRAG_SIZE
+    for point in points.split(1, dim=0):
         coord = extend(prev_three_coords, point.squeeze(0), True)
         coords_list.append(coord)
         prev_three_coords = Triplet(prev_three_coords.b,
@@ -490,14 +535,3 @@ def point_to_coordinate(points, use_gpu, num_fragments):
     coords = F.pad(coords_to_pad, (0, 0, 0, 0, 1, 0))
 
     return coords
-
-
-def load_model_from_disk(path, force_cpu=True):
-    if force_cpu:
-        model = torch.load(path, map_location=lambda storage, loc: storage)
-        model.flatten_parameters()
-        model.use_gpu = False
-    else:
-        model = torch.load(path)
-        model.flatten_parameters()
-    return model

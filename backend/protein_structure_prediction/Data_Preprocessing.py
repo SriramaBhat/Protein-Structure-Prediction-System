@@ -22,8 +22,10 @@ def process_raw_data(use_gpu, raw_data_path="data/raw/*", force_pre_processing_o
     for file_path in input_files_filtered:
         if platform.system() == 'Windows':
             filename = file_path.split('\\')[-1]
+            print(filename)
         else:
             filename = file_path.split('/')[-1]
+            print(filename)
         preprocessed_file_name = "data/preprocessed/" + filename + ".hdf5"
 
         # check if we should remove any previously processed files

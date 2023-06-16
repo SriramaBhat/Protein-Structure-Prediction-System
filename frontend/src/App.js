@@ -9,6 +9,7 @@ import { useContext } from "react";
 import DNAToAA from "./components/dna-to-aa/dnaToAA.component";
 import NotAuthorized from "./components/NotAuthorized/NotAuthorized.component";
 import NotFound from "./components/NotFound/NotFound.component";
+import AAStructPred from "./components/aa-structure-prediction/aaStructurePrediction";
 
 function App() {
   const { currentUser } = useContext(UserContext);
@@ -20,9 +21,15 @@ function App() {
         <Route path="login" element={<LoginForm />} />
         <Route path="signup" element={<SignUpForm />} />
         {currentUser ? (
-          <Route path="dna-to-aa" element={<DNAToAA />} />
+          <>
+            <Route path="dna-to-aa" element={<DNAToAA />} />
+            <Route path="aa-struct-pred" element={<AAStructPred />} />
+          </>
         ) : (
-          <Route path="dna-to-aa" element={<NotAuthorized />} />
+          <>
+            <Route path="dna-to-aa" element={<NotAuthorized />} />
+            <Route path="aa-struct-pred" element={<NotAuthorized />} />
+          </>
         )}
       </Route>
       <Route path="*" element={<NotFound />} />
