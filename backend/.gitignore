@@ -4,3 +4,7 @@
 /protein_structure_prediction/.ipynb_checkpoints
 /protein_structure_prediction/.idea
 /protein_structure_prediction/data/*
+/protein_structure_prediction/models/*
+/protein_structure_prediction/sidechainnet_data/*
+/protein_structure_prediction/plots/*
+/protein_structure_prediction/__pycache__/*

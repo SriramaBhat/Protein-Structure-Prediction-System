@@ -50,7 +50,7 @@ def train(model, config, dataloader, device):
             mask = (batch.angs.ne(0)).unsqueeze(-1).repeat(1, 1, 1, 2)
 
             # Make predictions and optimize
-            predicted_angles = model(seqs, mask = mask_)
+            predicted_angles = model(seqs, mask=mask_)
             loss = mse_loss(predicted_angles[mask], true_angles_sincos[mask])
             loss.backward()
             torch.nn.utils.clip_grad_norm_(model.parameters(), 2)

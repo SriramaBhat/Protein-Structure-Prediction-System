@@ -1,0 +1,45 @@
+.navigation {
+  width: 100%;
+  height: 5rem;
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  background-color: rgb(94, 178, 230);
+  position: static;
+}
+.navigation .logo-container {
+  height: 100%;
+  width: 25rem;
+  padding-left: 1rem;
+  display: flex;
+  justify-content: flex-start;
+  font-weight: bold;
+  align-items: center;
+}
+.navigation .logo-container #protein-logo {
+  margin: 0;
+  width: 85px;
+  height: 70px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  display: block;
+}
+.navigation .logo-container p {
+  margin: 0;
+}
+.navigation .nav-links-container {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.navigation .nav-links-container .nav-link {
+  padding: 0.6rem 1rem;
+  cursor: pointer;
+}
+.navigation .nav-links-container .nav-link:hover {
+  background-color: rgb(68, 147, 197);
+  border-radius: 4px;
+}/*# sourceMappingURL=navigation.styles.css.map */

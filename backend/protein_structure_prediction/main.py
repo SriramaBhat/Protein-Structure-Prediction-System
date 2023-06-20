@@ -8,6 +8,7 @@ from visualize import build_visualizable_structures, plot_protein
 from model import ProteinNet
 from trainer import train
 from config import get_parameters
+# from visualizer import plotting
 
 seed = 0
 random.seed(seed)
@@ -30,12 +31,12 @@ def main(config, dataloader):
 
     # Create the model and move it to the GPU
     model = ProteinNet(d_hidden=config.d_hidden,
-                            dim=config.dim,
-                            d_in=config.d_in,
-                            d_embedding=config.d_embedding,
-                            heads = config.n_heads,
-                            dim_head = config.head_dim,
-                            integer_sequence=config.integer_sequence)
+                       dim=config.dim,
+                       d_in=config.d_in,
+                       d_embedding=config.d_embedding,
+                       heads = config.n_heads,
+                       dim_head = config.head_dim,
+                       integer_sequence=config.integer_sequence)
     model = model.to(device)
 
     trained_model = train(model, config, dataloader, device)
@@ -43,8 +44,9 @@ def main(config, dataloader):
         os.mkdir(config.model_save_path)
     torch.save(trained_model.state_dict(), '{}/model_weights.pth'.format(config.model_save_path))
 
+
 def plot(idx, dataloader, config):
-    model =  ProteinNet(d_hidden=config.d_hidden,
+    model = ProteinNet(d_hidden=config.d_hidden,
                         dim=config.dim,
                         d_in=config.d_in,
                         d_embedding=config.d_embedding,
@@ -61,6 +63,7 @@ def plot(idx, dataloader, config):
     s_true.to_pdb(idx,path='./plots/{}_true.pdb'.format(idx))
     plot_protein('./plots/{}_pred.pdb'.format(idx), './plots/{}_true.pdb'.format(idx))
 
+
 if __name__ == '__main__':
     config = get_parameters()
     print("Model Configuration: ")
@@ -69,8 +72,8 @@ if __name__ == '__main__':
     dataloader = scn.load(
                 with_pytorch="dataloaders",
                 batch_size=config.batch, 
-                dynamic_batching=False)
+                dynamic_batching=False, num_workers=0)
     if config.train:
-        main(config, dataloader)
+        main(config, dataloader)   
     else:
         plot(config.idx, dataloader, config)

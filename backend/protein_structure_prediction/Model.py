@@ -3,6 +3,7 @@ from torch import nn
 from attention_layer import Attention
 import sidechainnet as scn
 
+
 class ProteinNet(nn.Module):
     """A protein sequence-to-angle model that consumes integer-coded sequences."""
     def __init__(self,
@@ -10,8 +11,8 @@ class ProteinNet(nn.Module):
                  dim,
                  d_in=21,
                  d_embedding=32,
-                 heads = 8,
-                 dim_head = 64,
+                 heads=8,
+                 dim_head=64,
                  integer_sequence=True,
                  n_angles=scn.structure.build_info.NUM_ANGLES):
         
@@ -19,9 +20,7 @@ class ProteinNet(nn.Module):
         # Dimensionality of RNN hidden state
         self.d_hidden = d_hidden
       
-        self.attn = Attention(dim = dim, 
-                                heads = heads,
-                                dim_head = dim_head)
+        self.attn = Attention(dim=dim, heads=heads, dim_head=dim_head)
         # Output vector dimensionality (per amino acid)
         self.d_out = n_angles * 2
         # Output projection layer. (from RNN -> target tensor)
@@ -48,6 +47,7 @@ class ProteinNet(nn.Module):
             self.input_embedding = torch.nn.Embedding(d_in, d_embedding, padding_idx=20)
         else:
             self.input_embedding = torch.nn.Linear(d_in, d_embedding)
+
     def get_lengths(self, sequence):
         """Compute the lengths of each sequence in the batch."""
         if self.integer_sequence:
@@ -66,11 +66,8 @@ class ProteinNet(nn.Module):
 
         # Then we pass in our data into the RNN via PyTorch's pack_padded_sequences
         sequence = torch.nn.utils.rnn.pack_padded_sequence(sequence,
-                                                         lengths,
-                                                         batch_first=True,
-                                                         enforce_sorted=False)
-        output, output_lengths = torch.nn.utils.rnn.pad_packed_sequence(sequence,
-                                                                      batch_first=True)
+                                                           lengths, batch_first=True, enforce_sorted=False)
+        output, output_lengths = torch.nn.utils.rnn.pad_packed_sequence(sequence, batch_first=True)
         # At this point, output has the same dimentionality as the RNN's hidden
         # state: i.e. (batch, length, d_hidden). 
       

@@ -2,7 +2,7 @@ import argparse
 
 
 def str2bool(v):
-    return v.lower() in ('true')
+    return v.lower() in 'true'
 
 
 def get_parameters():
@@ -22,7 +22,7 @@ def get_parameters():
                         help="Number of heads in Attention Layer.")
     parser.add_argument('-h_dim','--head_dim', dest='head_dim', default=64, type=int,
                         help="Dimension of heads in Attention Layer.")
-    parser.add_argument('-int_seq','--integer_sequence', dest='integer_sequence', type=str2bool, default=False,
+    parser.add_argument('-int_seq','--integer_sequence', dest='integer_sequence', type=str2bool, default=True,
                         help="Dimension of heads in Attention Layer.")
 
     # Training parameters
@@ -31,13 +31,13 @@ def get_parameters():
     parser.add_argument('-e', '--epoch', type=int, default=10, help="Training Epochs.")
     parser.add_argument('-b', '--batch', dest='batch',type=int, default=4,
                         help="Batch size during each training step.")
-    parser.add_argument('-t','--train', type=str2bool, default=False,help="True when train the model, \
+    parser.add_argument('-t', '--train', type=str2bool, default=False, help="True when train the model, \
                         else used for testing.")
-    parser.add_argument('--mode', type=str, default='pssms', choices=['pssms', 'seqs'],
+    parser.add_argument('--mode', type=str, default='seqs', choices=['pssms', 'seqs'],
                         help="Mode of trainig the model. Select the input of model either to be PSSM-Position Specific Scoring Matrix \
                               or Seqs(Protein Sequence)")
     # Validation
-    parser.add_argument('--idx', type=int, default=0,
+    parser.add_argument('--idx', type=int, default=2,
                         help="Validation index")
 
     # Base Directory

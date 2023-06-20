@@ -1,0 +1,30 @@
+.not-auth {
+  text-align: center;
+}
+.not-auth h1 {
+  font-size: 4rem;
+  color: rgb(74, 17, 7);
+}
+.not-auth p {
+  font-size: 2rem;
+  color: rgb(74, 17, 7);
+}
+
+.btn {
+  padding: 0.5rem 3rem;
+  display: inline-block;
+  border-radius: 6px;
+  font-family: inherit;
+  background-color: goldenrod;
+  border: none;
+  font-size: 1.2rem;
+  transition: ease-in-out 300ms;
+  margin: 10px 10px;
+}
+
+.btn:hover {
+  transform: scale(1.1, 1.1);
+  transition: ease-in-out 300ms;
+  background-color: gold;
+  border: 1.5px solid black;
+}/*# sourceMappingURL=notAuth.styles.css.map */
