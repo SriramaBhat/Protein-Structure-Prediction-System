@@ -42,7 +42,7 @@ def main(config, dataloader):
     trained_model = train(model, config, dataloader, device)
     if os.path.exists(config.model_save_path)==False:
         os.mkdir(config.model_save_path)
-    torch.save(trained_model.state_dict(), '{}/model_weights.pth'.format(config.model_save_path))
+    torch.save(trained_model.state_dict(), '{}/model_test_weights.pth'.format(config.model_save_path))
 
 
 def plot(idx, dataloader, config):
@@ -59,8 +59,8 @@ def plot(idx, dataloader, config):
     if os.path.exists('./plots')==False:
         os.mkdir('./plots')
     s_pred, s_true = build_visualizable_structures(model, dataloader['train'], config, device)
-    s_pred.to_pdb(idx,path='./plots/{}_pred.pdb'.format(idx))
-    s_true.to_pdb(idx,path='./plots/{}_true.pdb'.format(idx))
+    s_pred.to_pdb(idx, path='./plots/{}_pred.pdb'.format(idx))
+    s_true.to_pdb(idx, path='./plots/{}_true.pdb'.format(idx))
     plot_protein('./plots/{}_pred.pdb'.format(idx), './plots/{}_true.pdb'.format(idx))
 
 

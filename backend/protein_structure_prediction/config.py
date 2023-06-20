@@ -29,7 +29,7 @@ def get_parameters():
     parser.add_argument('-lr', '--learning_rate', dest='learning_rate', default=0.001, type=float,
                         help="Learning Rate.")
     parser.add_argument('-e', '--epoch', type=int, default=10, help="Training Epochs.")
-    parser.add_argument('-b', '--batch', dest='batch',type=int, default=4,
+    parser.add_argument('-b', '--batch', dest='batch',type=int, default=6,
                         help="Batch size during each training step.")
     parser.add_argument('-t', '--train', type=str2bool, default=False, help="True when train the model, \
                         else used for testing.")
@@ -37,7 +37,7 @@ def get_parameters():
                         help="Mode of trainig the model. Select the input of model either to be PSSM-Position Specific Scoring Matrix \
                               or Seqs(Protein Sequence)")
     # Validation
-    parser.add_argument('--idx', type=int, default=2,
+    parser.add_argument('--idx', type=int, default=3,
                         help="Validation index")
 
     # Base Directory
