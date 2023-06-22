@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { fetchData } from "../../utils/fetchData/Fetch";
 import "./dnaToAA.styles.scss";
+import { useNavigate } from "react-router-dom";
 
 const defaultFormFields = {
   dnaString: "",
@@ -12,6 +13,7 @@ const DNAToAA = () => {
   const [aaString, setAaString] = useState("");
   const [conversionMessage, setConversionMessage] = useState("");
   const { dnaString } = formFields;
+  const navigate = useNavigate();
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
@@ -44,6 +46,7 @@ const DNAToAA = () => {
   const handleAASubmit = async (event) => {
     try {
       event.preventDefault();
+      const aaString = event.target.aaString.value;
       const { data } = await fetchData(
         "http://localhost:5000/aa-struct-pred",
         "POST",
@@ -51,7 +54,8 @@ const DNAToAA = () => {
           aaString: aaString,
         }
       );
-      await fetchData("http://localhost/" + data.pdbPath, "GET");
+      console.log(data.pdbPath);
+      navigate("/aa-struct", { state: { data } });
       setConversionMessage(data.message);
       console.log(conversionMessage);
       resetFormFields();
