@@ -2,6 +2,16 @@
 # yarn lockfile v1
 
 
+"3dmol@^2.0.3":
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/3dmol/-/3dmol-2.0.3.tgz#d513ceddaeea5e586550ef39fa50ba8a55810eff"
+  integrity sha512-1O7AIUN65uuE8RF8ZKC2sD2pLo7SZbsIMNnA3EqeRtK1+xkmnGoybgnOLwuNMmM5EN97EXs/WgPpNsXGSautFw==
+  dependencies:
+    iobuffer "^5.3.1"
+    netcdfjs "^2.0.2"
+    pako "^2.1.0"
+    upng-js "^2.1.0"
+
 "@adobe/css-tools@^4.0.1":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@adobe/css-tools/-/css-tools-4.2.0.tgz#e1a84fca468f4b337816fcb7f0964beb620ba855"
@@ -5559,6 +5569,11 @@ internal-slot@^1.0.3, internal-slot@^1.0.4, internal-slot@^1.0.5:
     has "^1.0.3"
     side-channel "^1.0.4"
 
+iobuffer@^5.2.1, iobuffer@^5.3.1:
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/iobuffer/-/iobuffer-5.3.2.tgz#76d3fb907c655ad6fb7a73964bfca8b4e04f52fa"
+  integrity sha512-kO3CjNfLZ9t+tHxAMd+Xk4v3D/31E91rMs1dHrm7ikEQrlZ8mLDbQ4z3tZfDM48zOkReas2jx8MWSAmN9+c8Fw==
+
 ipaddr.js@1.9.1:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz#bff38543eeb8984825079ff3a2a8e6cbd46781b3"
@@ -6404,6 +6419,11 @@ jiti@^1.17.2:
   resolved "https://registry.yarnpkg.com/jiti/-/jiti-1.18.2.tgz#80c3ef3d486ebf2450d9335122b32d121f2a83cd"
   integrity sha512-QAdOptna2NYiSSpv0O/BwoHBSmz4YhpzJHyi+fnMRTXFjp7B8i/YG5Z8IfusxB1ufjcD2Sre1F3R+nX3fvy7gg==
 
+jquery@^3.7.0:
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.7.0.tgz#fe2c01a05da500709006d8790fe21c8a39d75612"
+  integrity sha512-umpJ0/k8X0MvD1ds0P9SfowREz2LenHsQaxSohMZ5OMNEU2r0tf8pdeEFTHMFxWVxKNyU9rTtK3CWzUCTKJUeQ==
+
 js-sdsl@^4.1.4:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/js-sdsl/-/js-sdsl-4.4.0.tgz#8b437dbe642daa95760400b602378ed8ffea8430"
@@ -6909,6 +6929,13 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
+netcdfjs@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/netcdfjs/-/netcdfjs-2.0.2.tgz#d008b568e4b0046b28b0e8b17608c25c2248ac19"
+  integrity sha512-Uyz+3rqdF3D4WhnQY3lmG/FBY53OsDfloYnjBhoG+jZZs25RXWIOVU8d+V852Kv0xgtt1MzaSdeYmUS9enJ+ow==
+  dependencies:
+    iobuffer "^5.2.1"
+
 no-case@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/no-case/-/no-case-3.0.4.tgz#d361fd5c9800f558551a8369fc0dcd4662b6124d"
@@ -7175,6 +7202,16 @@ p-try@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/p-try/-/p-try-2.2.0.tgz#cb2868540e313d61de58fafbe35ce9004d5540e6"
   integrity sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
+
+pako@^1.0.5:
+  version "1.0.11"
+  resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
+  integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
+
+pako@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/pako/-/pako-2.1.0.tgz#266cc37f98c7d883545d11335c00fbd4062c9a86"
+  integrity sha512-w+eufiZ1WuJYgPXbV/PO3NCMEc3xqylkKHzp8bxp1uW4qaSNQUkwmLLEc3kKsfz8lpV1F8Ht3U1Cm+9Srog2ug==
 
 param-case@^3.0.4:
   version "3.0.4"
@@ -9379,6 +9416,13 @@ update-browserslist-db@^1.0.10:
   dependencies:
     escalade "^3.1.1"
     picocolors "^1.0.0"
+
+upng-js@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/upng-js/-/upng-js-2.1.0.tgz#7176e73973db361ca95d0fa14f958385db6b9dd2"
+  integrity sha512-d3xzZzpMP64YkjP5pr8gNyvBt7dLk/uGI67EctzDuVp4lCZyVMo0aJO6l/VDlgbInJYDY6cnClLoBp29eKWI6g==
+  dependencies:
+    pako "^1.0.5"
 
 uri-js@^4.2.2:
   version "4.4.1"

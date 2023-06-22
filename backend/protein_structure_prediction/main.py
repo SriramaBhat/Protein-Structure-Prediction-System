@@ -23,11 +23,11 @@ if torch.cuda.is_available():
     device = torch.device("cuda")
 else:
     device = torch.device("cpu")
-print(f"Using {device} for training.")
+# print(f"Using {device} for training.")
 
 
 def main(config, dataloader):
-    print("Available Dataloaders =", list(dataloader.keys()))
+    # print("Available Dataloaders =", list(dataloader.keys()))
 
     # Create the model and move it to the GPU
     model = ProteinNet(d_hidden=config.d_hidden,
@@ -66,8 +66,8 @@ def plot(idx, dataloader, config):
 
 if __name__ == '__main__':
     config = get_parameters()
-    print("Model Configuration: ")
-    print(config)
+    # print("Model Configuration: ")
+    # print(config)
     # Load the data in the appropriate format for training.
     dataloader = scn.load(
                 with_pytorch="dataloaders",

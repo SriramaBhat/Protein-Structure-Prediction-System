@@ -41,6 +41,25 @@ const DNAToAA = () => {
     }
   };
 
+  const handleAASubmit = async (event) => {
+    try {
+      event.preventDefault();
+      const { data } = await fetchData(
+        "http://localhost:5000/aa-struct-pred",
+        "POST",
+        {
+          aaString: aaString,
+        }
+      );
+      await fetchData("http://localhost/" + data.pdbPath, "GET");
+      setConversionMessage(data.message);
+      console.log(conversionMessage);
+      resetFormFields();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });
@@ -110,6 +129,11 @@ const DNAToAA = () => {
             <div>
               <h1>Amino Acid Sequence</h1>
               <p>{aaString}</p>
+              <form action="" onSubmit={handleAASubmit}>
+                <button type="submit" className="form-btn">
+                  Predict
+                </button>
+              </form>
             </div>
           )}
         </div>

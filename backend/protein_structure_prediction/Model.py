@@ -59,7 +59,7 @@ class ProteinNet(nn.Module):
     def forward(self, sequence, mask=None):
         """Run one forward step of the model."""
         # First, we compute sequence lengths
-        print(sequence.shape)
+        # print(sequence.shape)
         lengths = self.get_lengths(sequence)
 
         # Next, we embed our input tensors for input to the RNN

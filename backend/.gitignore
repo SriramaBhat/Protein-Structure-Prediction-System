@@ -1,5 +1,6 @@
 # Dependencies
 /node_modules
+/dna_to_aa_conversion/__pycache__/*
 /protein_structure_prediction/env
 /protein_structure_prediction/.ipynb_checkpoints
 /protein_structure_prediction/.idea

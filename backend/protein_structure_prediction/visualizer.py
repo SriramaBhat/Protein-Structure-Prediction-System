@@ -4,9 +4,10 @@ from sidechainnet.structure.structure import inverse_trig_transform
 import py3Dmol
 import os
 from datetime import datetime
+import sys
 
 from model import ProteinNet
-from config import get_parameters
+# from config import get_parameters
 
 
 def aa_to_int_seq(aaString, device):
@@ -17,7 +18,7 @@ def aa_to_int_seq(aaString, device):
     aa_int_seq = torch.tensor(aa_int_seq)
     aa_int_seq = aa_int_seq.to(device)
     aa_int_seq = aa_int_seq.unsqueeze(0)
-    print(aa_int_seq.shape)
+    # print(aa_int_seq.shape)
     return aa_int_seq
 
 
@@ -30,39 +31,48 @@ def build_structure(model, data, device):
 
 
 def plot_protein(exp):
-    p = py3Dmol.view(js='https://3dmol.org/build/3Dmol.js', viewergrid=(0, 0))
+    p = py3Dmol.view(js='https://3dmol.org/build/3Dmol.js', viewergrid=(1, 1))
     p.addModel(open(exp, 'r').read(), 'pdb', viewer=(0, 0))
     p.setStyle({'cartoon': {'color': 'spectrum'}})
     p.zoomTo()
     p.show()
 
 
-def plotting(aaString, config, device):
+def plotting(aaString, device):
     aa_int_seq = aa_to_int_seq(aaString, device)
-    model = ProteinNet(d_hidden=config.d_hidden,
-                       dim=config.dim,
-                       d_in=config.d_in,
-                       d_embedding=config.d_embedding,
-                       heads=config.n_heads,
-                       dim_head=config.head_dim,
-                       integer_sequence=config.integer_sequence)
+    model = ProteinNet(d_hidden=512,
+                       dim=256,
+                       d_in=49,
+                       d_embedding=32,
+                       heads=8,
+                       dim_head=64,
+                       integer_sequence=True)
     model = model.to(device)
-    model.load_state_dict(torch.load('{}/model_weights.pth'.format(config.model_save_path)))
+    model.load_state_dict(torch.load(
+        'F:\\Protein-Structure-Prediction-System\\backend\\protein_structure_prediction\\models\\model_weights.pth'))
 
     if not os.path.exists('./plots'):
         os.mkdir('./plots')
     sb_preds = build_structure(model, aa_int_seq, device)
     date_string = datetime.now().strftime("%d_%m_%Y_%H_%M_%S")
+    sb_preds.to_pdb(0,
+                    path="F:\\Protein-Structure-Prediction-System\\backend\\protein_structure_prediction\\plots\\{}_pred.pdb".format(date_string))
     print(date_string)
-    sb_preds.to_pdb(0, path='./plots/{}_pred.pdb'.format(date_string))
-    plot_protein("./plots/{}_pred.pdb".format(date_string))
-
-
-if __name__ == "__main__":
+    plot_protein("F:\\Protein-Structure-Prediction-System\\backend\\protein_structure_prediction\\plots\\{}_pred.pdb"
+                 .format(date_string))
+    
+def predict():
     if torch.cuda.is_available():
         device = torch.device("cuda")
     else:
         device = torch.device("cpu")
-    aaString = input("Enter the amino acid string: ")
-    config = get_parameters()
-    plotting(aaString, config, device)
+    aaString = sys.argv[1]
+    # aaString = input("Enter the aa sequence: ")
+    try:
+        plotting(aaString, device)
+    except ImportError:
+        print("")
+
+
+if __name__ == "__main__":
+    predict()
