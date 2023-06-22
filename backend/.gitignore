@@ -9,3 +9,4 @@
 /protein_structure_prediction/sidechainnet_data/*
 /protein_structure_prediction/plots/*
 /protein_structure_prediction/__pycache__/*
+/backend/plots/*
